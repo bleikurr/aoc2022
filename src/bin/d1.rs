@@ -1,23 +1,10 @@
-use std::env;
-use std::io::{self, BufRead, BufReader};
-use std::fs::File;
-
-
-fn get_input() -> Result<Box<dyn BufRead>, Box<dyn std::error::Error>> {
-    let args: Vec<String> = env::args().collect();
-
-    if args.len() > 1 {
-        return Ok(Box::new(BufReader::new(File::open(&args[1])?)));
-    } else {
-        return Ok(Box::new(BufReader::new(io::stdin())));
-    }
-}
+use aoc2022::cmd;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut buffer = String::new();
     let mut elves: Vec<i32> = vec![];
 
-    let mut reader = get_input()?;
+    let mut reader = cmd::get_input()?;
 
     let mut acc = 0;
     while reader.read_line(&mut buffer)? > 0 {
