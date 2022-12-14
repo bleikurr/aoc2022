@@ -3,23 +3,23 @@ use std::io::{self, BufRead, BufReader};
 use std::fs::File;
 
 
-
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn get_input() -> Result<Box<dyn BufRead>, Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
 
-    let reader: Option<Box<dyn BufRead>>;
-    let mut buffer = String::new();
+    if args.len() > 1 {
+        return Ok(Box::new(BufReader::new(File::open(&args[1])?)));
+    } else {
+        return Ok(Box::new(BufReader::new(io::stdin())));
+    }
+}
 
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let mut buffer = String::new();
     let mut elves: Vec<i32> = vec![];
 
-    if args.len() > 1 {
-        reader = Some(Box::new(BufReader::new(File::open(&args[1])?)));
-    } else {
-        reader = Some(Box::new(BufReader::new(io::stdin())));
-    }
+    let mut reader = get_input()?;
 
     let mut acc = 0;
-    let mut reader = reader.unwrap();
     while reader.read_line(&mut buffer)? > 0 {
         let line = buffer.trim();
         if line.is_empty()  {
@@ -45,3 +45,4 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     return Ok(())
 }
+
